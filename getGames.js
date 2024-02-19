@@ -24,3 +24,31 @@ export async function getGamesByName(name) {
   const url = `${baseURL}/games?key=${key}&ordering=-released&search=${name}`;
   return getData(url).then((data) => data.results);
 }
+
+//Zadatak 3
+async function getPlatform(platformName) {
+  console.log(platfromName);
+
+  const url = `${baseURL}/platforms?key=${key}&ordering=-games_count&search=${platformName}`;
+  return getData(url).then((data) => data.results);
+}
+
+export async function getGamesByPlatforms(platformNames) {
+  console.log(platformNames);
+
+  const platformIds = await Promise.all(
+    platformNames.map((platform) => getPlatform(platform).id)
+  );
+
+  return getData(
+    `${baseURL}/games?key=${key}&search=${platformIds.join(
+      ","
+    )}&page_size=20&ordering=-name`
+  ).then((data) => data.results);
+}
+
+//Zadatak 4
+export async function getGameById(id) {
+  const url = `${baseURL}/games/${id}?key=${key}`;
+  return getData(url);
+}

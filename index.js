@@ -1,4 +1,9 @@
-import { getGamesByMetacritic, getGamesByName } from "./getGames.js";
+import {
+  getGamesByMetacritic,
+  getGamesByName,
+  getGamesByPlatforms,
+  getGameById,
+} from "./getGames.js";
 
 function addContainer(array, title) {
   const numberOfElements = array.length;
@@ -10,7 +15,6 @@ function addContainer(array, title) {
   const container = document.createElement("div");
 
   for (let i = 0; i < numberOfElements; i++) {
-    console.log(i);
     const name = array[i].name;
     const released = array[i].released;
     const imageURL = array[i].background_image;
@@ -19,8 +23,12 @@ function addContainer(array, title) {
     const card = document.createElement("div");
     card.classList.add("game-card");
     container.appendChild(card);
-    card.innerHTML = `
-                    <img src="${imageURL}" alt="${name}">
+    if (imageURL != null) {
+      card.innerHTML = `
+        <img src="${imageURL}" alt="${name}">`;
+    }
+    card.innerHTML += `
+    <h4>Name: ${name}</h4>
                     <p>Release Date: ${released}</p>
                     <p>Metacritic Rating: ${metacritic}</p>
                 `;
@@ -38,16 +46,44 @@ getGamesByMetacritic()
 
 //ZADATAK 2
 const nameOfAGame = prompt("Unesi ime igre");
-getGamesByName(nameOfAGame).then((games) => {
-  console.log(games.slice(0, 10));
-  addContainer(
-    games.slice(0, 10),
-    `ZADATAK 2. prvih 10 igara sortirane po datumu izlaska koje sadrže ${nameOfAGame} u imenu`
-  );
-});
+getGamesByName(nameOfAGame)
+  .then((games) => {
+    console.log(games.slice(0, 10));
+    addContainer(
+      games.slice(0, 10),
+      `ZADATAK 2. prvih 10 igara sortirane po datumu izlaska koje sadrže ${nameOfAGame} u imenu`
+    );
+  })
+  .catch(console.error);
 
-//ZADATAK 3 
-//Pozivanjem /platforms uzmite platforme na kojima se igre nalaze. Od toga uzmite top 10 
-//platforma po broju igara i u prompt upitajte korisnika da upise ime svih platforma koje želi. 
-//Korisnik upisuje imena platforma odvojena zarezima, a nakon sto pronađete koje su to platforme 
-//opet zovete /games i tražite igre po tim platformama, uzmite 20 i sortirajte ih po imenu 
+//ZADATAK 3
+const platfromNames = prompt(
+  "Unesi ime platformi odvojenih zarezom bez razmaka"
+);
+const platforms = platfromNames.split(",").map((platform) => platform.trim());
+console.log(platforms);
+getGamesByPlatforms(platforms)
+  .then((games) => {
+    console.log("Games by selected platforms:", games);
+    addContainer(games, `ZADATAK 3.`);
+  })
+  .catch(console.error);
+
+//ZADATAK 4
+const gameId = prompt("Unesi id igrice");
+
+getGameById(gameId)
+  .then((game) => {
+    console.log("Game details:", game);
+    addContainer([game], "Zadatak 4");
+    const starRating = parseFloat(game.rating);
+    const filledStars = Math.floor(starRating);
+    const card = document.createElement("div");
+    let stars = "&#9733";
+    for (let i = 0; i < filledStars - 1; i++) {
+      stars += " &#9733";
+    }
+    card.innerHTML += `<p>${stars}</p>`;
+    document.body.appendChild(card);
+  })
+  .catch(console.error);
