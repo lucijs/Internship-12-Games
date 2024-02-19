@@ -5,6 +5,11 @@ async function getData(url) {
   try {
     const response = await fetch(url);
     const data = await response.json();
+    for (const item of data) {
+      if (item.esrb_rating === null || item.esrb_rating === 5) {
+        data.pop(item);
+      }
+    }
     return data;
   } catch (error) {
     console.error("Error:", error.message);

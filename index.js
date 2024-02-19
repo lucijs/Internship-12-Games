@@ -10,11 +10,8 @@ import {
 
 function addContainer(array, title) {
   const numberOfElements = array.length;
-  console.log(numberOfElements);
   const containerTitle = document.createElement("h2");
-
   containerTitle.textContent = title;
-
   const container = document.createElement("div");
 
   for (let i = 0; i < numberOfElements; i++) {
@@ -42,11 +39,8 @@ function addContainer(array, title) {
 
 function addContainerForStore(array, title) {
   const numberOfElements = array.length;
-  console.log(numberOfElements);
   const containerTitle = document.createElement("h2");
-
   containerTitle.textContent = title;
-
   const container = document.createElement("div");
 
   for (let i = 0; i < numberOfElements; i++) {
